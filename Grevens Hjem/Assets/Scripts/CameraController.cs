@@ -11,14 +11,18 @@ public class CameraController : MonoBehaviour {
 
     public GameObject[] button;
 
+    float startTime;
+
     Vector3 camPos;
     Quaternion camRot;
 
 
 	// Use this for initialization
 	void Start () {
-	   // GameObject.FindGameObjectsWithTag()
-	}
+        // GameObject.FindGameObjectsWithTag()
+
+        StartDistanceToPOI = Vector3.Distance(currentPOI.position, camPos);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,6 +37,8 @@ public class CameraController : MonoBehaviour {
         //sets the current point of interest to the numerical value of the button pressed
         currentPOI = pointsOfInterest[val];
 
+        StartDistanceToPOI = Vector3.Distance(currentPOI.position, camPos);
+
     }
 
 
@@ -40,15 +46,18 @@ public class CameraController : MonoBehaviour {
     {
         //(the camera's location - PointOfInterest)*transitionSpeed?
 
-        //float distanceCovered = (Time.time - startTime) * cameraSpeed;
+        // float distanceCovered = (Time.time - startTime) * cameraSpeed;
 
         // gameObject.transform.position = 
         camPos = gameObject.transform.position;
         camRot = gameObject.transform.rotation;
 
-        StartDistanceToPOI = Vector3.Distance(currentPOI.position, camPos);
+        
 
-        transform.position = Vector3.Lerp(previousPOI.position, currentPOI.position, StartDistanceToPOI);
+        float distanceCovered = (Time.time - startTime) * cameraSpeed;
+        float journeyPart = distanceCovered / StartDistanceToPOI;
+
+        transform.position = Vector3.Lerp(previousPOI.position, currentPOI.position, journeyPart);
         
         //okay so now we have a distance between the two areas
         //
